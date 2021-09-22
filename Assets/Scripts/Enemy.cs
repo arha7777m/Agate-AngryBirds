@@ -7,7 +7,14 @@ public class Enemy : MonoBehaviour
 
     public UnityAction<GameObject> OnEnemyDestroyed = delegate { };
 
-    private bool _isHit = false;
+    public bool _isHit = false;
+
+    private void Update()
+    {
+        if(gameObject.CompareTag("Destroy")) _isHit = true;
+
+        if (_isHit) Destroy(gameObject);
+    }
 
     void OnDestroy()
     {
@@ -21,22 +28,23 @@ public class Enemy : MonoBehaviour
     {
         if (col.gameObject.GetComponent<Rigidbody2D>() == null) return;
 
-        if (col.gameObject.tag == "Bird")
-        {
-            _isHit = true;
-            Destroy(gameObject);
-        }
-        else if (col.gameObject.tag == "Obstacle")
+        if (col.gameObject.CompareTag("Bird")) _isHit = true;
+        else if (col.gameObject.CompareTag("Obstacle"))
         {
             //Hitung damage yang diperoleh
             float damage = col.gameObject.GetComponent<Rigidbody2D>().velocity.magnitude * 10;
-            Health -= damage;
-
-            if (Health <= 0)
-            {
-                _isHit = true;
-                Destroy(gameObject);
-            }
+            GetAttacked(damage);
         }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Destroyer")) _isHit = true;
+    }
+
+    public void GetAttacked(float damage)
+    {
+        Health -= damage;
+        if (Health <= 0) _isHit = true;
     }
 }

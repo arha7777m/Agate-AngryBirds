@@ -7,6 +7,9 @@ TagManager:
   - Obstacle
   - Bird
   - Enemy
+  - Destroyer
+  - Destroy
+  - Land
   layers:
   - Default
   - TransparentFX
@@ -16,8 +19,8 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
+  - Obstacle
+  - Enemy
   - 
   - 
   - 

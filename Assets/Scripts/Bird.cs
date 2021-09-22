@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -15,7 +14,7 @@ public class Bird : MonoBehaviour
 
     public BirdState State { get { return _state; } }
 
-    private BirdState _state;
+    protected BirdState _state;
     private float _minVelocity = 0.05f;
     private bool _flagDestroy = false;
 
@@ -37,7 +36,7 @@ public class Bird : MonoBehaviour
             OnBirdDestroyed();
     }
 
-    void OnCollisionEnter2D(Collision2D col)
+    public virtual void OnCollisionEnter2D(Collision2D col)
     {
         _state = BirdState.HitSomething;
     }
@@ -54,15 +53,15 @@ public class Bird : MonoBehaviour
            RigidBody.velocity.sqrMagnitude < _minVelocity &&
            !_flagDestroy)
         {
-            //Hancurkan gameobject setelah 2 detik
+            //Hancurkan gameobject setelah 1 detik
             //jika kecepatannya sudah kurang dari batas minimum
             _flagDestroy = true;
-            StartCoroutine(DestroyAfter(2));
+            StartCoroutine(DestroyAfter(1f));
         }
 
     }
 
-    private IEnumerator DestroyAfter(float second)
+    public IEnumerator DestroyAfter(float second)
     {
         yield return new WaitForSeconds(second);
         Destroy(gameObject);
@@ -78,9 +77,7 @@ public class Bird : MonoBehaviour
     {
         Collider.enabled = true;
         RigidBody.bodyType = RigidbodyType2D.Dynamic;
-        RigidBody.velocity = velocity * speed * distance;
+        RigidBody.velocity = distance * speed * velocity;
         OnBirdShot(this);
     }
-
-
 }
